@@ -13,7 +13,6 @@ import general
 import launchMapPages
 import midi
 import sys
-import internal
 import consts
 
 btnCaptureMidi = 0x4A
