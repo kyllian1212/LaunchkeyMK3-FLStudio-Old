@@ -39,12 +39,7 @@ class TMain():
         event.handled = False
         print('--------------------------------')
         print(event.midiId, event.midiChan, event.data1, event.data2, event.sysex)
-        event.handled = False
-        
-        # If the event is unhandled, print out what it is:
-        if event.handled is False:
-            print("Unhandled event: {:X} {:X} {:2X} {}".format(event.status, event.data1, event.data2,  internal.EventNameT[(event.status - 0x80) // 16] + ': '+  utils.GetNoteName(event.data1)))
-
+        event.handled = True
 
 Main = TMain()
 
