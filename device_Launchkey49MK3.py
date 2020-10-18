@@ -39,7 +39,6 @@ class TMain():
         event.handled = False
         print('--------------------------------')
         print(event.midiId, event.midiChan, event.data1, event.data2, event.sysex)
-        event.handled = True
 
 Main = TMain()
 
