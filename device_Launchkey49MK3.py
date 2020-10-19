@@ -1,5 +1,6 @@
 # name=Launchkey 49 MK3
 
+#fl imports
 import ui
 import playlist
 import channels
@@ -12,18 +13,14 @@ import device
 import general
 import launchMapPages
 import midi
+
+#ext imports
+import consts as c
+import launchkeyConsts as lpc
+
+#python imports
 import sys
-
-btnCaptureMidi = 0x4A
-btnQuantise = 0x4B
-btnClick = 0x4C
-btnUndo = 0x4D
-
-btnPlay = 0x73
-btnStop = 0x74
-btnRecord = 0x75
-btnPattern = 0x76
-
+import time
 
 class TMain():
     def __init__(self):

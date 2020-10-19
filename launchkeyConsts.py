@@ -1,0 +1,182 @@
+'''
+consts for the launchkey mk3!
+used this as a reference: 
+https://fael-downloads-prod.focusrite.com/customer/prod/s3fs-public/downloads/Launchkey_MK3_Programmers_Reference.pdf
+'''
+
+'''
+colors:
+only the first 64 colors are written here im lazy for the rest LOL
+colors ref for the first 64 colors (except black & white): light > normal > dark > darker
+'''
+#black & white
+LIGHTING_OFF = 0x00
+LIGHTING_DARKER = 0x01
+LIGHTING_DARK = 0x02
+LIGHTING_WHITE = 0x03
+
+#red
+LIGHTING_LIGHTRED = 0x04
+LIGHTING_RED = 0x05
+LIGHTING_DARKRED = 0x06
+LIGHTING_DARKERRED = 0x07
+
+#orange
+LIGHTING_LIGHTORANGE = 0x08
+LIGHTING_ORANGE = 0x09
+LIGHTING_DARKORANGE = 0x0A
+LIGHTING_DARKERORANGE = 0x0B #substitute to brown
+
+#yellow
+LIGHTING_LIGHTORANGE = 0x0C
+LIGHTING_ORANGE = 0x0D
+LIGHTING_DARKORANGE = 0x0E
+LIGHTING_DARKERORANGE = 0x0F 
+
+#lime green
+LIGHTING_LIGHTLIMEGREEN = 0x10
+LIGHTING_LIMEGREEN = 0x11
+LIGHTING_DARKLIMEGREEN = 0x12
+LIGHTING_DARKERLIMEGREEN = 0x13
+
+#green
+LIGHTING_LIGHTGREEN = 0x14
+LIGHTING_GREEN = 0x15
+LIGHTING_DARKGREEN = 0x16
+LIGHTING_DARKERGREEN = 0x17
+
+#blue green
+LIGHTING_LIGHTBLUEGREEN = 0x18
+LIGHTING_BLUEGREEN = 0x19
+LIGHTING_DARKBLUEGREEN = 0x1A
+LIGHTING_DARKERBLUEGREEN = 0x1B
+
+#aqua
+LIGHTING_LIGHTAQUA = 0x1C
+LIGHTING_AQUA = 0x1D
+LIGHTING_DARKAQUA = 0x1E
+LIGHTING_DARKERAQUA = 0x1F 
+
+#cyan
+LIGHTING_LIGHTCYAN = 0x20
+LIGHTING_CYAN = 0x21
+LIGHTING_DARKCYAN = 0x22
+LIGHTING_DARKERCYAN = 0x23
+
+#turquoise
+LIGHTING_LIGHTTURQUOISE = 0x24
+LIGHTING_TURQUOISE = 0x25
+LIGHTING_DARKTURQUOISE = 0x26
+LIGHTING_DARKERTURQUOISE = 0x27
+
+#azure
+LIGHTING_LIGHTAZURE = 0x28
+LIGHTING_AZURE = 0x29
+LIGHTING_DARKAZURE = 0x2A
+LIGHTING_DARKERAZURE = 0x2B
+
+#blue
+LIGHTING_LIGHTBLUE = 0x2C
+LIGHTING_BLUE = 0x2D
+LIGHTING_DARKBLUE = 0x2E
+LIGHTING_DARKERBLUE = 0x2F
+
+#cobalt
+LIGHTING_LIGHTCOBALT = 0x30
+LIGHTING_COBALT = 0x31
+LIGHTING_DARKCOBALT = 0x32
+LIGHTING_DARKERCOBALT = 0x33
+
+#purple
+LIGHTING_LIGHTPURPLE = 0x34
+LIGHTING_PURPLE = 0x35
+LIGHTING_DARKPURPLE = 0x36
+LIGHTING_DARKERPURPLE = 0x37
+
+#pink
+LIGHTING_LIGHTPINK = 0x38
+LIGHTING_PINK = 0x39
+LIGHTING_DARKPINK = 0x3A
+LIGHTING_DARKERPINK = 0x3B
+
+#alt colors
+LIGHTING_PUREORANGE = 0x38
+LIGHTING_YELLOWORANGE = 0x39
+LIGHTING_YELLOWGREEN = 0x3A
+LIGHTING_APPLEGREEN = 0x3B
+
+'''
+color mode:
+corresponds to the way it's flashing
+'''
+COLORMODE_STATIONARY = 0x00
+COLORMODE_FLASHING = 0x01 #broken? i never got it to work
+COLORMODE_PULSING = 0x02
+COLORMODE_STATIONARYGRAYSCALE = 0x0F #CC associated controls only
+
+'''
+pads & buttons location:
+pads 1-8 is top row of pads, excluding up arrow (top left) and right arrow (top right)
+pads 9-16 is bottom row of pads, excluding down arrow (bottom left) and stop/solo/mute (bottom right)
+fader buttons 1-8 is fader buttons (except arm/select)
+
+this applies to SESSION MODE only
+'''
+#pads
+PAD_1 = 0x60
+PAD_2 = 0x61
+PAD_3 = 0x62
+PAD_4 = 0x63
+PAD_5 = 0x64
+PAD_6 = 0x65
+PAD_7 = 0x66
+PAD_8 = 0x67
+PAD_9 = 0x70
+PAD_10 = 0x71
+PAD_11 = 0x72
+PAD_12 = 0x73
+PAD_13 = 0x74
+PAD_14 = 0x75
+PAD_15 = 0x76
+PAD_16 = 0x77
+PAD_RIGHTARROW = 0x68
+PAD_STOPSOLOMUTE = 0x69
+PAD_UPARROW = 0x6A
+PAD_DOWNARROW = 0x25
+
+#fader buttons
+FADERBUTTON_1 = 0x26
+FADERBUTTON_2 = 0x27
+FADERBUTTON_3 = 0x28
+FADERBUTTON_4 = 0x29
+FADERBUTTON_5 = 0x2A
+FADERBUTTON_6 = 0x2B
+FADERBUTTON_7 = 0x2C
+FADERBUTTON_8 = 0x2D
+FADERBUTTON_ARMSELECT = 0x2E
+
+#general buttons
+BTN_SHIFT = 0x6C
+BTN_TRACKLEFT = 0x67 #they swapped both track left and track right prob accidentally lol
+BTN_TRACKRIGHT = 0x66
+BTN_CAPTUREMIDI = 0x4A
+BTN_QUANTISE = 0x4B
+BTN_CLICK = 0x4C
+BTN_UNDO = 0x4D
+BTN_PLAY = 0x73
+BTN_STOP = 0x74
+BTN_RECORD = 0x75
+BTN_PATTERN = 0x76
+
+
+'''
+sysex messages:
+allows to show stuff on the 16x2 chars screen
+
+how to show messages: 
+device.midiOutSysex([consts.SYSEX_BEGIN_TOP/consts.SYSEX_BEGIN_BOTTOM] + str.encode([your message here]) + consts.SYSEX_END)
+'''
+SYSEX_BEGIN_TOP = bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x0F, 0x04, 0])
+SYSEX_BEGIN_BOTTOM = bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x0F, 0x04, 1])
+SYSEX_END = bytes([0xF7])
+SYSEX_CLEAR = bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x0F, 0x06, 0xF7])
