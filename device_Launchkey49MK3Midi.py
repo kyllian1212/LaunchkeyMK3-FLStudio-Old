@@ -17,6 +17,7 @@ import midi
 #ext imports
 import consts as c
 import launchkeyConsts as lpc
+import lighting as l
 
 #python imports
 import sys
@@ -37,7 +38,8 @@ class TMain:
             sys.exit(0)
         print('init completed')
         device.midiOutMsg(0x9F, 0x0F, 0x0C, 0x7F)
-        initLightning()
+
+        l.initLightning()
 
         device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode(ui.getProgTitle()) + lpc.SYSEX_END)
         device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode(ui.getVersion()) + lpc.SYSEX_END)
@@ -64,13 +66,13 @@ class TMain:
             if event.data2 > 0:
                 #capture midi
                 if event.data1 == lpc.BTN_CAPTUREMIDI:
-                    print('capture midi')
+                    inactiveButton()
                 #quantise
                 if event.data1 == lpc.BTN_QUANTISE:
-                    print('quantise')
+                    inactiveButton()
                 #click
                 elif event.data1 == lpc.BTN_CLICK:
-                    print(general.getUseMetronome())
+                    inactiveButton()
                 #undo
                 elif event.data1 == lpc.BTN_UNDO:
                     general.undo()
@@ -147,38 +149,46 @@ def clearSysexMessage():
     except:
         errorHandler()
 
+def inactiveButton():
+    buttonInactiveTop = "Button currently"
+    buttonInactiveBottom = "inactive"
+
+    device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode(buttonInactiveTop) + lpc.SYSEX_END)
+    device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode(buttonInactiveBottom) + lpc.SYSEX_END)
+
+#error handler if something happens and it crashes
 def errorHandler():
     global dawInit
     if dawInit:
-        device.midiOutMsg(0x90, 0x02, 0x60, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x61, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x62, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x63, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x64, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x65, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x66, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x67, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x68, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x69, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x6A, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x6B, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x70, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x71, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x72, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x73, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x74, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x75, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x76, 0x05)
-        device.midiOutMsg(0x90, 0x02, 0x77, 0x05)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_1, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_2, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_3, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_4, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_5, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_6, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_7, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_8, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_9, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_10, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_11, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_12, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_13, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_14, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_15, lpc.COLOR_RED)
+        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_16, lpc.COLOR_RED)
 
-        device.midiOutMsg(0xB0, 0x02, 0x25, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x26, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x27, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x28, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x29, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x2A, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x2B, 0x05)
-        device.midiOutMsg(0xB0, 0x02, 0x2C, 0x05)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_UPARROW, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_DOWNARROW, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_RIGHTARROW, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_STOPSOLOMUTE, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_1, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_2, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_3, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_4, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_5, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_6, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_7, lpc.COLOR_RED)
+        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_8, lpc.COLOR_RED)
 
         device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode("EXCEPTION!!!!!!!") + lpc.SYSEX_END)
         device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode("INSTRUCTIONS:") + lpc.SYSEX_END)
@@ -198,36 +208,3 @@ def errorHandler():
         dawInit = False
         
         sys.exit(-1)
-
-def initLightning():
-    #temp until i do the lighting stuff
-    device.midiOutMsg(0x90, 0x02, 0x60, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x61, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x62, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x63, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x64, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x65, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x66, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x67, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x68, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x69, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x6A, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x6B, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x70, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x71, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x72, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x73, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x74, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x75, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x76, 0x00)
-    device.midiOutMsg(0x90, 0x02, 0x77, 0x00)
-
-    device.midiOutMsg(0xB0, 0x02, 0x25, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x26, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x27, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x28, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x29, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x2A, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x2B, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x2C, 0x00)
-    device.midiOutMsg(0xB0, 0x02, 0x2D, 0x00)
