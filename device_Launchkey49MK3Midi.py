@@ -15,47 +15,40 @@ import launchMapPages
 import midi
 
 #ext imports
-import consts as c
-import launchkeyConsts as lpc
+import launchkeyConsts as lkc
+import launchkey as lk
 import lighting as l
+import screenSysex as s
 
 #python imports
 import sys
 import time
-
-#variables
-dawInit = False
 
 class TMain:
     def __init__(self):
         return
     
     def OnInit(self):
-        global dawInit
-
         if device.isAssigned() == 0:
             print('DEVICE PORT NOT ASSIGNED. EXITING.')
             sys.exit(0)
         print('init completed')
-        device.midiOutMsg(0x9F, 0x0F, 0x0C, 0x7F)
 
-        l.initLightning()
+        lk.enableDAW()
+        l.resetLightning()
 
-        device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode(ui.getProgTitle()) + lpc.SYSEX_END)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode(ui.getVersion()) + lpc.SYSEX_END)
+        s.sendMessageTopRow(ui.getProgTitle())
+        s.sendMessageBottomRow(ui.getVersion())
         
-        dawInit = True
 
     def OnDeInit(self):
-        global dawInit
-
         if device.isAssigned() == 0:
             print('DEVICE PORT NOT ASSIGNED. EXITING.')
             sys.exit(0)
         print('deinit completed')
-        device.midiOutMsg(0x9F, 0x0F, 0x0C, 0x00)
+        
+        lk.disableDAW()
 
-        dawInit = False
 
     def OnMidiMsg(self, event):
         event.handled = False
@@ -65,28 +58,28 @@ class TMain:
         if event.midiId == midi.MIDI_CONTROLCHANGE:
             if event.data2 > 0:
                 #capture midi
-                if event.data1 == lpc.BTN_CAPTUREMIDI:
+                if event.data1 == lkc.BTN_CAPTUREMIDI:
                     inactiveButton()
                 #quantise
-                if event.data1 == lpc.BTN_QUANTISE:
+                if event.data1 == lkc.BTN_QUANTISE:
                     inactiveButton()
                 #click
-                elif event.data1 == lpc.BTN_CLICK:
+                elif event.data1 == lkc.BTN_CLICK:
                     inactiveButton()
                 #undo
-                elif event.data1 == lpc.BTN_UNDO:
+                elif event.data1 == lkc.BTN_UNDO:
                     general.undo()
                 #play/pause
-                elif event.data1 == lpc.BTN_PLAY:
+                elif event.data1 == lkc.BTN_PLAY:
                     transport.start()
                 #stop
-                elif event.data1 == lpc.BTN_STOP:
+                elif event.data1 == lkc.BTN_STOP:
                     transport.stop()
                 #record
-                elif event.data1 == lpc.BTN_RECORD:
+                elif event.data1 == lkc.BTN_RECORD:
                     transport.record()
                 #pattern/song
-                elif event.data1 == lpc.BTN_PATTERN:
+                elif event.data1 == lkc.BTN_PATTERN:
                     transport.setLoopMode()
                     
         #end of btn press
@@ -106,9 +99,8 @@ class TMain:
         mixerTrackPan = str("{:.0f}".format(mixer.getTrackPan(mixer.trackNumber())*100))
         mixerTrackSettings = "V" + mixerTrackVolume + "% | P" + mixerTrackPan + "%"
 
-        device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode(mixerTrackInfo) + lpc.SYSEX_END)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode(mixerTrackSettings) + lpc.SYSEX_END)
-
+        s.sendMessageTopRow(mixerTrackInfo)
+        s.sendMessageBottomRow(mixerTrackSettings)
 
 Main = TMain()
 
@@ -145,7 +137,7 @@ def OnDirtyMixerTrack(index):
 
 def clearSysexMessage():
     try:
-        device.midiOutSysex(lpc.SYSEX_CLEAR)
+        device.midiOutSysex(lkc.SYSEX_CLEAR)
     except:
         errorHandler()
 
@@ -153,58 +145,58 @@ def inactiveButton():
     buttonInactiveTop = "Button currently"
     buttonInactiveBottom = "inactive"
 
-    device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode(buttonInactiveTop) + lpc.SYSEX_END)
-    device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode(buttonInactiveBottom) + lpc.SYSEX_END)
+    device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode(buttonInactiveTop) + lkc.SYSEX_END)
+    device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode(buttonInactiveBottom) + lkc.SYSEX_END)
 
 #error handler if something happens and it crashes
 def errorHandler():
-    global dawInit
-    if dawInit:
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_1, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_2, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_3, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_4, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_5, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_6, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_7, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_8, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_9, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_10, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_11, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_12, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_13, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_14, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_15, lpc.COLOR_RED)
-        l.lightMainPad(lpc.COLORMODE_PULSING, lpc.PAD_16, lpc.COLOR_RED)
+    SLEEP_TIME = 1
+    if lk.dawMode:
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_1, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_2, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_3, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_4, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_5, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_6, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_7, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_8, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_9, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_10, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_11, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_12, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_13, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_14, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_15, lkc.COLOR_RED)
+        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_16, lkc.COLOR_RED)
 
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_UPARROW, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_DOWNARROW, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_RIGHTARROW, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.PAD_STOPSOLOMUTE, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_1, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_2, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_3, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_4, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_5, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_6, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_7, lpc.COLOR_RED)
-        l.lightCCPad(lpc.COLORMODE_PULSING, lpc.FADERBUTTON_8, lpc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_UPARROW, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_DOWNARROW, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_RIGHTARROW, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_STOPSOLOMUTE, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_1, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_2, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_3, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_4, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_5, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_6, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_7, lkc.COLOR_RED)
+        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_8, lkc.COLOR_RED)
 
-        device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode("EXCEPTION!!!!!!!") + lpc.SYSEX_END)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode("INSTRUCTIONS:") + lpc.SYSEX_END)
-        time.sleep(4)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode("CHECK VIEW >") + lpc.SYSEX_END)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode("SCRIPT OUTPUT") + lpc.SYSEX_END)
-        time.sleep(4)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode("FOR TRACEBACK") + lpc.SYSEX_END)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode("AND TO RELOAD.") + lpc.SYSEX_END)
-        time.sleep(4)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode("REVERTING TO") + lpc.SYSEX_END)
-        device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode("MIDI MODE...") + lpc.SYSEX_END)
-        time.sleep(4)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("EXCEPTION!!!!!!!") + lkc.SYSEX_END)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("INSTRUCTIONS:") + lkc.SYSEX_END)
+        time.sleep(SLEEP_TIME)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("CHECK VIEW >") + lkc.SYSEX_END)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("SCRIPT OUTPUT") + lkc.SYSEX_END)
+        time.sleep(SLEEP_TIME)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("FOR TRACEBACK") + lkc.SYSEX_END)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("AND TO RELOAD.") + lkc.SYSEX_END)
+        time.sleep(SLEEP_TIME)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("REVERTING TO") + lkc.SYSEX_END)
+        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("MIDI MODE...") + lkc.SYSEX_END)
+        time.sleep(SLEEP_TIME)
 
         device.midiOutMsg(0x9F, 0x0F, 0x0C, 0x00)
 
-        dawInit = False
+        lk.dawMode = False
         
         sys.exit(-1)

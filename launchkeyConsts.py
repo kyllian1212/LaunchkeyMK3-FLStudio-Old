@@ -106,13 +106,13 @@ COLOR_YELLOWGREEN = 0x3A
 COLOR_APPLEGREEN = 0x3B
 
 '''
-color mode:
+pad state:
 corresponds to the way it's flashing
 '''
-COLORMODE_STATIONARY = 0x00
-COLORMODE_FLASHING = 0x01 #broken? i never got it to work
-COLORMODE_PULSING = 0x02
-COLORMODE_STATIONARYGRAYSCALE = 0x0F #CC associated controls only
+STATE_STATIONARY = 0x00
+STATE_FLASHING = 0x01 #broken? i never got it to work
+STATE_PULSING = 0x02
+STATE_STATIONARYGRAYSCALE = 0x0F #CC associated controls only
 
 '''
 pads & buttons location:
