@@ -3,7 +3,7 @@
 ## v0.0.2
 
 ### Changes
-* If a button is inactive (as in it has no functionality yet), but has no LED to allow visual feedback, it will now show on the screen as "Button currently inactive" when clicked.
+* If an inactive button (which means it has no functionality yet) is pressed, but has no LED to allow visual feedback, the screen will now show "Button currently inactive".
 
 ### Bugfixes
 * Fixed an issue with the mixer volume & pan tracking (which was delayed and inaccurate)
