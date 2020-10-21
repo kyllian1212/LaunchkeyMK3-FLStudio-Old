@@ -17,10 +17,13 @@ import launchMapPages
 import midi
 
 #ext imports
-import launchkeyConsts as lpc
+import launchkeyConsts as lkc
 
 def sendMessageTopRow(message):
-    device.midiOutSysex(lpc.SYSEX_BEGIN_TOP + str.encode(message) + lpc.SYSEX_END)
+    device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode(message) + lkc.SYSEX_END)
 
 def sendMessageBottomRow(message):
-    device.midiOutSysex(lpc.SYSEX_BEGIN_BOTTOM + str.encode(message) + lpc.SYSEX_END)
+    device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode(message) + lkc.SYSEX_END)
+
+def clearSysexMessage():
+    device.midiOutSysex(lkc.SYSEX_CLEAR)

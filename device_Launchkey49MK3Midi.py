@@ -135,12 +135,7 @@ def OnDirtyMixerTrack(index):
     except:
         errorHandler()
 
-def clearSysexMessage():
-    try:
-        device.midiOutSysex(lkc.SYSEX_CLEAR)
-    except:
-        errorHandler()
-
+#not fl functions
 def inactiveButton():
     buttonInactiveTop = "Button currently"
     buttonInactiveBottom = "inactive"
