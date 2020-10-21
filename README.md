@@ -10,3 +10,5 @@
 * 'Undo', 'Play', 'Stop', 'Record', 'Pattern/Song Toggle' buttons on the controller now functional
 * Selected mixer track info & volume/pan settings showing in the 16x2 characters screen
 
+### Credits
+* Thanks to edwardsew for optimizing my code!
