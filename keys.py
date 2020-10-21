@@ -22,13 +22,13 @@ lightingDict = {
     lkc.PAD_DOWNARROW: [lk.padsColor[1][0],lk.padsState[1][0]],
     lkc.PAD_RIGHTARROW: [lk.padsColor[0][9],lk.padsState[0][9]],
     lkc.PAD_STOPSOLOMUTE: [lk.padsColor[1][9],lk.padsState[1][9]],
-    lkc.FADERBUTTON_1: [lk.faderButtonsColor[0], faderButtonsState[0]],
-    lkc.FADERBUTTON_2: [lk.faderButtonsColor[1], faderButtonsState[1]],
-    lkc.FADERBUTTON_3: [lk.faderButtonsColor[2], faderButtonsState[2]],
-    lkc.FADERBUTTON_4: [lk.faderButtonsColor[3], faderButtonsState[3]],
-    lkc.FADERBUTTON_5: [lk.faderButtonsColor[4], faderButtonsState[4]],
-    lkc.FADERBUTTON_6: [lk.faderButtonsColor[5], faderButtonsState[5]],
-    lkc.FADERBUTTON_7: [lk.faderButtonsColor[6], faderButtonsState[6]],
-    lkc.FADERBUTTON_8: [lk.faderButtonsColor[7], faderButtonsState[7]],
-    lkc.FADERBUTTON_ARMSELECT: [lk.faderButtonsColor[8], faderButtonsState[8]]
+    lkc.FADERBUTTON_1: [lk.faderButtonsColor[0], lk.faderButtonsState[0]],
+    lkc.FADERBUTTON_2: [lk.faderButtonsColor[1], lk.faderButtonsState[1]],
+    lkc.FADERBUTTON_3: [lk.faderButtonsColor[2], lk.faderButtonsState[2]],
+    lkc.FADERBUTTON_4: [lk.faderButtonsColor[3], lk.faderButtonsState[3]],
+    lkc.FADERBUTTON_5: [lk.faderButtonsColor[4], lk.faderButtonsState[4]],
+    lkc.FADERBUTTON_6: [lk.faderButtonsColor[5], lk.faderButtonsState[5]],
+    lkc.FADERBUTTON_7: [lk.faderButtonsColor[6], lk.faderButtonsState[6]],
+    lkc.FADERBUTTON_8: [lk.faderButtonsColor[7], lk.faderButtonsState[7]],
+    lkc.FADERBUTTON_ARMSELECT: [lk.faderButtonsColor[8], lk.faderButtonsState[8]]
 }
