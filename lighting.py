@@ -23,6 +23,9 @@ import launchkey as lk
 from keys import lightingDict
 
 def lightPad(state, padNumber, color):
+    if lightingDict.keys().index(padNumber) <= 15:
+        device.midiOutMsg(0x90, state, padNumber, color)
+    
     lightingDict[padNumber][0] = color
     lightingDict[padNumber][1] = state
     
