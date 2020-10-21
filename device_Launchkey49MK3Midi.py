@@ -182,21 +182,19 @@ def errorHandler():
         l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_7, lkc.COLOR_RED)
         l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_8, lkc.COLOR_RED)
 
-        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("EXCEPTION!!!!!!!") + lkc.SYSEX_END)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("INSTRUCTIONS:") + lkc.SYSEX_END)
+        s.sendMessageTopRow("EXCEPTION!!!!!!!")
+        s.sendMessageBottomRow("INSTRUCTIONS:")
         time.sleep(SLEEP_TIME)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("CHECK VIEW >") + lkc.SYSEX_END)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("SCRIPT OUTPUT") + lkc.SYSEX_END)
+        s.sendMessageTopRow("CHECK VIEW >")
+        s.sendMessageBottomRow("SCRIPT OUTPUT")
         time.sleep(SLEEP_TIME)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("FOR TRACEBACK") + lkc.SYSEX_END)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("AND TO RELOAD.") + lkc.SYSEX_END)
+        s.sendMessageTopRow("FOR TRACEBACK")
+        s.sendMessageBottomRow("AND TO RELOAD.")
         time.sleep(SLEEP_TIME)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_TOP + str.encode("REVERTING TO") + lkc.SYSEX_END)
-        device.midiOutSysex(lkc.SYSEX_BEGIN_BOTTOM + str.encode("MIDI MODE...") + lkc.SYSEX_END)
+        s.sendMessageTopRow("REVERTING TO")
+        s.sendMessageBottomRow("MIDI MODE...")
         time.sleep(SLEEP_TIME)
 
-        device.midiOutMsg(0x9F, 0x0F, 0x0C, 0x00)
-
-        lk.dawMode = False
+        lk.disableDAW()
         
         sys.exit(-1)

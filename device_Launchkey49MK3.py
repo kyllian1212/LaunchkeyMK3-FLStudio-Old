@@ -16,7 +16,7 @@ import midi
 
 #ext imports
 import consts as c
-import launchkeyConsts as lpc
+import launchkeyConsts as lkc
 
 #python imports
 import sys

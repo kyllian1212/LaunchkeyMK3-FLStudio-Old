@@ -18,7 +18,7 @@ import midi
 
 #ext imports
 import consts as c
-import launchkeyConsts as lpc
+import launchkeyConsts as lkc
 import lighting as l
 import screenSysex as s
 
@@ -48,6 +48,7 @@ faderButtonsColor = [0,0,0,0,0,0,0,0,0]
 #which state each fader button has rn
 faderButtonsState = [0,0,0,0,0,0,0,0,0]
 
+'''launchkey functionment'''
 #enable daw mode
 def enableDAW():
     global dawMode
