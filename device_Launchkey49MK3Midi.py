@@ -24,6 +24,9 @@ import screenSysex as s
 import sys
 import time
 
+#import dict
+from keys import lightingDict
+
 class TMain:
     def __init__(self):
         return
@@ -90,13 +93,13 @@ class TMain:
 
     def OnUpdateBeatIndicator(self, value):
         if value == 0:
-            l.lightCCPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_OFF)
+            l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_OFF)
             print(lk.faderButtonsColor)
         elif value == 1:
-            l.lightCCPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_WHITE)
+            l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_WHITE)
             print(lk.faderButtonsColor)
         elif value == 2:
-            l.lightCCPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_DARKER)
+            l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_DARKER)
             print(lk.faderButtonsColor)
 
     def OnDirtyMixerTrack(self, index):
@@ -164,35 +167,8 @@ def inactiveButton():
 def errorHandler():
     SLEEP_TIME = 1
     if lk.dawMode:
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_1, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_2, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_3, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_4, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_5, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_6, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_7, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_8, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_9, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_10, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_11, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_12, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_13, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_14, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_15, lkc.COLOR_RED)
-        l.lightMainPad(lkc.STATE_PULSING, lkc.PAD_16, lkc.COLOR_RED)
-
-        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_UPARROW, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_DOWNARROW, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_RIGHTARROW, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.PAD_STOPSOLOMUTE, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_1, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_2, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_3, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_4, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_5, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_6, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_7, lkc.COLOR_RED)
-        l.lightCCPad(lkc.STATE_PULSING, lkc.FADERBUTTON_8, lkc.COLOR_RED)
+        for light in lightingDict:
+            l.lightPad(lkc.STATE_PULSING, light, lkc.COLOR_RED)
 
         s.sendMessageTopRow("EXCEPTION!!!!!!!")
         s.sendMessageBottomRow("INSTRUCTIONS:")
