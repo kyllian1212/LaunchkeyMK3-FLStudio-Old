@@ -88,6 +88,17 @@ class TMain:
     def OnRefresh(self, flags):
         print('refresh')
 
+    def OnUpdateBeatIndicator(self, value):
+        if value == 0:
+            l.lightCCPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_OFF)
+            print(lk.faderButtonsColor)
+        elif value == 1:
+            l.lightCCPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_WHITE)
+            print(lk.faderButtonsColor)
+        elif value == 2:
+            l.lightCCPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_DARKER)
+            print(lk.faderButtonsColor)
+
     def OnDirtyMixerTrack(self, index):
         mixerTrackNumberStr = str(mixer.trackNumber())
         mixerTrackName = mixer.getTrackName(mixer.trackNumber())
@@ -126,6 +137,12 @@ def OnMidiMsg(event):
 def onRefresh(flags):
     try:
         Main.OnRefresh(flags)
+    except:
+        errorHandler()
+
+def OnUpdateBeatIndicator(value):
+    try:
+        Main.OnUpdateBeatIndicator(value)
     except:
         errorHandler()
 
