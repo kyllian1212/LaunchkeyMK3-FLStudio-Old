@@ -1,3 +1,6 @@
+import launchkeyConsts as lkc
+import launchkey as lk
+
 lightingDict = {
     lkc.PAD_1: [ld.padsColor[0][1], ld.padsState[0][1]],
     lkc.PAD_2: [ld.padsColor[0][2],ld.padsState[0][2]],
