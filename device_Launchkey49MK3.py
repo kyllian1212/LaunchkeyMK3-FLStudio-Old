@@ -7,7 +7,6 @@ import channels
 import mixer
 import patterns
 import arrangement
-import ui
 import transport
 import device
 import general
