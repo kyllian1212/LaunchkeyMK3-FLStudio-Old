@@ -20,16 +20,16 @@ import midi
 import launchkeyConsts as lkc
 import launchkey as lk
 
-from keys import lightingDict
-
 def lightPad(state, padNumber, color):
-    if lightingDict.keys().index(padNumber) <= 15:
+    if list(lk.lightingDict).index(padNumber) <= 15:
         device.midiOutMsg(0x90, state, padNumber, color)
+    else:
+        device.midiOutMsg(0xB0, state, padNumber, color)
     
-    lightingDict[padNumber][0] = color
-    lightingDict[padNumber][1] = state
+    lk.lightingDict[padNumber][0] = color
+    lk.lightingDict[padNumber][1] = state
     
 #allows to clear the lighting of every pad
 def resetLightning():
-    for light in lightingDict:
+    for light in lk.lightingDict:
         lightPad(lkc.STATE_STATIONARY, light, lkc.COLOR_OFF)

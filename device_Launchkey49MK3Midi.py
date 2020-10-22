@@ -24,9 +24,6 @@ import screenSysex as s
 import sys
 import time
 
-#import dict
-from keys import lightingDict
-
 class TMain:
     def __init__(self):
         return
@@ -94,13 +91,10 @@ class TMain:
     def OnUpdateBeatIndicator(self, value):
         if value == 0:
             l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_OFF)
-            print(lk.faderButtonsColor)
         elif value == 1:
             l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_WHITE)
-            print(lk.faderButtonsColor)
         elif value == 2:
             l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_DARKER)
-            print(lk.faderButtonsColor)
 
     def OnDirtyMixerTrack(self, index):
         mixerTrackNumberStr = str(mixer.trackNumber())
@@ -165,9 +159,9 @@ def inactiveButton():
 
 #error handler if something happens and it crashes
 def errorHandler():
-    SLEEP_TIME = 1
+    SLEEP_TIME = 3
     if lk.dawMode:
-        for light in lightingDict:
+        for light in list(lk.lightingDict)[:-1]:
             l.lightPad(lkc.STATE_PULSING, light, lkc.COLOR_RED)
 
         s.sendMessageTopRow("EXCEPTION!!!!!!!")
