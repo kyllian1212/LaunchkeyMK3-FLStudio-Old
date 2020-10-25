@@ -18,6 +18,10 @@ import launchkeyConsts as lkc
 import launchkey as lk
 import lighting as l
 import screenSysex as s
+import mixerMode as m
+import mixerModeConsts as mc
+import mixerSettingsMode as ms
+import programConsts as prog
 
 #python imports
 import sys
@@ -28,6 +32,8 @@ class TMain:
         return
     
     def OnInit(self):
+        global programMode
+
         if device.isAssigned() == 0:
             print('DEVICE PORT NOT ASSIGNED. EXITING.')
             sys.exit(0)
@@ -36,15 +42,22 @@ class TMain:
         lk.enableDAW()
         l.resetLightning()
 
+        device.setHasMeters()
+
+        lk.modeChange(prog.MODE_INIT)
         s.sendMessageTopRow(ui.getProgTitle())
         s.sendMessageBottomRow(ui.getVersion())
-        
+        m.mixerInterface()
+        lk.modeChange(prog.MODE_MIXER)
+
 
     def OnDeInit(self):
         if device.isAssigned() == 0:
             print('DEVICE PORT NOT ASSIGNED. EXITING.')
             sys.exit(0)
         print('deinit completed')
+
+        lk.modeChange(prog.MODE_OFF)
         
         lk.disableDAW()
 
@@ -80,7 +93,28 @@ class TMain:
                 #pattern/song
                 elif event.data1 == lkc.BTN_PATTERN:
                     transport.setLoopMode()
-                    
+
+        
+        if event.data1 == 108 and event.status == 176 and event.data2 == 127:
+            lk.modeChange(prog.MODE_SHIFT)
+        elif event.data1 == 108 and event.status == 176 and event.data2 == 0:
+            lk.modeChange(prog.MODE_MIXER)
+
+        if lk.programMode == prog.MODE_MIXER:
+            m.mixerBtnPress(event)
+            if event.data1 == 104 and event.status == 176 and event.data2 == 127:
+                l.resetLightning()
+                lk.modeChange(prog.MODE_MIXERSETTINGS)
+                ms.mixerSettingInterface(event)
+        
+        if lk.programMode == prog.MODE_MIXERSETTINGS:
+            ms.mixerSettingInterface(event)
+            if event.data1 == 105 and event.status == 176 and event.data2 == 127:
+                l.resetLightning()
+                lk.modeChange(prog.MODE_MIXER)
+                m.mixerInterface()
+
+        
         #end of btn press
         event.handled = True
 
@@ -88,26 +122,27 @@ class TMain:
         print('refresh')
 
     def OnUpdateBeatIndicator(self, value):
-        if value == 0:
-            l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_OFF)
-        elif value == 1:
-            l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_WHITE)
-        elif value == 2:
-            l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_DARKER)
+        if lk.programMode == prog.MODE_MENU:
+            if value == 0:
+                l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_OFF)
+            elif value == 1:
+                l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_WHITE)
+            elif value == 2:
+                l.lightPad(lkc.STATE_STATIONARY, lkc.FADERBUTTON_ARMSELECT, lkc.COLOR_DARKER)
 
     def OnDirtyMixerTrack(self, index):
-        mixerTrackNumberStr = str(mixer.trackNumber())
-        mixerTrackName = mixer.getTrackName(mixer.trackNumber())
-        mixerTrackInfo = mixerTrackNumberStr + " - " + mixerTrackName
+        global programMode
 
-        time.sleep(0.05) #fixes the issue with the wrong settings being sent to the launchkey
+        if lk.programMode == prog.MODE_MIXER:
+            m.mixerUpdate(index)
+            m.mixerInterface()
 
-        mixerTrackVolume = str("{:.1f}".format(mixer.getTrackVolume(mixer.trackNumber())*125))
-        mixerTrackPan = str("{:.0f}".format(mixer.getTrackPan(mixer.trackNumber())*100))
-        mixerTrackSettings = "V" + mixerTrackVolume + "% | P" + mixerTrackPan + "%"
+    def OnUpdateMeters(self):
+        global programMode
 
-        s.sendMessageTopRow(mixerTrackInfo)
-        s.sendMessageBottomRow(mixerTrackSettings)
+        if lk.programMode == prog.MODE_MIXER:
+            m.mixerPeakInterface()
+        
 
 Main = TMain()
 
@@ -148,6 +183,12 @@ def OnDirtyMixerTrack(index):
     except:
         errorHandler()
 
+def OnUpdateMeters():
+    try:
+        Main.OnUpdateMeters()
+    except:
+        errorHandler()
+
 #not fl functions
 def inactiveButton():
     buttonInactiveTop = "Button currently"
@@ -158,7 +199,7 @@ def inactiveButton():
 
 #error handler if something happens and it crashes
 def errorHandler():
-    SLEEP_TIME = 3
+    SLEEP_TIME = 0.25
     if lk.dawMode:
         for light in list(lk.lightingDict)[:-1]:
             l.lightPad(lkc.STATE_PULSING, light, lkc.COLOR_RED)

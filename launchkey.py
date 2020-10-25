@@ -19,10 +19,14 @@ import midi
 import consts as c
 import launchkeyConsts as lkc
 import screenSysex as s
+import lighting as l
+import programConsts as prog
 
 #python imports
 import sys
 import time
+
+programMode = prog.MODE_OFF
 
 '''which state every launchkey params have!'''
 #DAW mode state on the launchkey
@@ -90,3 +94,7 @@ def disableDAW():
     global dawMode
     dawMode = False
     device.midiOutMsg(0x9F, 0x0F, 0x0C, 0x00)
+
+def modeChange(mode):
+    global programMode
+    programMode = mode

@@ -14,19 +14,29 @@ import launchMapPages
 import midi
 
 #ext imports
-import consts as c
 import launchkeyConsts as lkc
+import launchkey as lk
+import lighting as l
+import screenSysex as s
+import mixerMode as m
+import programConsts as prog
 
 #python imports
 import sys
 import time
+
+#variables
+programMode = prog.MODE_OFF
 
 class TMain():
     def __init__(self):
         return
 
     def OnInit(self):
+        global programMode
         print('Initialisation complete')
+        programMode = prog.MODE_MIXER
+        
 
     def OnDeInit(self):
         print('Deinitialisation complete')
@@ -35,6 +45,11 @@ class TMain():
         event.handled = False
         print('--------------------------------')
         print(event.midiId, event.midiChan, event.data1, event.data2, event.sysex)
+
+    '''    
+    def OnUpdateMeters(self):
+        m.mixerPeakInterface()
+    '''
 
 Main = TMain()
 
@@ -46,7 +61,10 @@ def OnDeInit():
 
 def OnMidiMsg(event):
     Main.OnMidiMsg(event)
-    
-    
+
+'''
+def OnUpdateMeters():
+    Main.OnUpdateMeters()
+'''
     
     
