@@ -11,4 +11,5 @@
 * Selected mixer track info & volume/pan settings showing in the 16x2 characters screen
 
 ### Credits
-* Thanks to edwardsew for optimizing my code!
+* Big thanks to [HDSQ](https://www.youtube.com/channel/UCPB_zkvsJKuIkCgEzoXtN3g) for the inspiration with the [Launchkey MK2 Script](https://github.com/MiguelGuthridge/Novation-LaunchKey-Mk2-Script). It has definitely helped me coding this
+* Thanks to edwardsew for optimizing my code
