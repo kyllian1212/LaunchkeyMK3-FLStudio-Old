@@ -21,6 +21,7 @@ import screenSysex as s
 import mixerMode as m
 import mixerModeConsts as mc
 import mixerSettingsMode as ms
+import quitMode as q
 import programConsts as prog
 
 #python imports
@@ -64,6 +65,7 @@ class TMain:
 
     def OnMidiMsg(self, event):
         event.handled = False
+        btnPressedFromPastMode = True
         print('--------------------------------')
         print('midi id:', event.midiId, '| midi status:', event.status, '| midi channel:', event.midiChan, 
         '| midi data1:', event.data1, '| midi data2:', event.data2, '| midi sysex:', event.sysex)
@@ -93,7 +95,6 @@ class TMain:
                 #pattern/song
                 elif event.data1 == lkc.BTN_PATTERN:
                     transport.setLoopMode()
-
         
         if event.data1 == 108 and event.status == 176 and event.data2 == 127:
             lk.modeChange(prog.MODE_SHIFT)
@@ -101,11 +102,16 @@ class TMain:
             lk.modeChange(prog.MODE_MIXER)
 
         if lk.programMode == prog.MODE_MIXER:
-            m.mixerBtnPress(event)
+            m.mixerEvent(event)
             if event.data1 == 104 and event.status == 176 and event.data2 == 127:
                 l.resetLightning()
                 lk.modeChange(prog.MODE_MIXERSETTINGS)
                 ms.mixerSettingInterface(event)
+            if event.data1 == 105 and event.status == 176 and event.data2 == 127:
+                l.resetLightning()
+                lk.modeChange(prog.MODE_QUITPROGRAMMENU)
+                q.quitModeInterface(event)
+                btnPressedFromPastMode = False
         
         if lk.programMode == prog.MODE_MIXERSETTINGS:
             ms.mixerSettingInterface(event)
@@ -113,7 +119,20 @@ class TMain:
                 l.resetLightning()
                 lk.modeChange(prog.MODE_MIXER)
                 m.mixerInterface()
-
+        
+        if lk.programMode == prog.MODE_QUITPROGRAMMENU:
+            q.quitModeInterface(event)
+            if event.data1 == 104 and event.status == 176 and event.data2 == 127:
+                l.resetLightning()
+                s.clearSysexMessage()
+                lk.modeChange(prog.MODE_OFF)
+                lk.disableDAW()
+            if event.data1 == 105 and event.status == 176 and event.data2 == 127 and btnPressedFromPastMode:
+                l.resetLightning()
+                s.clearSysexMessage()
+                lk.modeChange(prog.MODE_MIXER)
+                m.mixerInterface()
+            
         
         #end of btn press
         event.handled = True

@@ -26,6 +26,7 @@ import time
 
 mixerTrackLaunchKeyIndex = 1
 setting = 0
+soloMode = False
 
 def mixerUpdate(index):
     global mixerTrackLaunchKeyIndex
@@ -39,7 +40,7 @@ def mixerUpdate(index):
     mixerTrackName = mixer.getTrackName(mixer.trackNumber())
     mixerTrackInfo = mixerTrackNumberStr + " - " + mixerTrackName
 
-    time.sleep(0.05) #fixes the issue with the wrong settings being sent to the launchkey
+    time.sleep(0.02) #fixes the issue with the wrong settings being sent to the launchkey
 
     mixerTrackVolume = str("{:.1f}".format(mixer.getTrackVolume(mixer.trackNumber())*125))
     mixerTrackPan = str("{:.0f}".format(mixer.getTrackPan(mixer.trackNumber())*100))
@@ -50,6 +51,7 @@ def mixerUpdate(index):
 
 def mixerInterface():
     global mixerTrackLaunchKeyIndex
+    global soloMode
 
     #lights up the arrows + stop buttons
     l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[16], lkc.COLOR_DARKER)
@@ -57,11 +59,10 @@ def mixerInterface():
     l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[18], lkc.COLOR_DARKER)
     l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[19], lkc.COLOR_DARKERRED)
 
-
-    if not mixer.isTrackMuted(0):
+    if not soloMode:
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[28], lkc.COLOR_DARKER)
     else:
-        l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[28], lkc.COLOR_OFF)
+        l.lightPad(lkc.STATE_PULSING, list(lk.lightingDict)[28], lkc.COLOR_WHITE)
 
     for i in range(1,9):
         if not mixer.isTrackMuted(mixerTrackLaunchKeyIndex+(i-1)):
@@ -250,8 +251,9 @@ def mixerPeakInterface1Master():
     else:
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[15], lkc.COLOR_OFF)
 
-def mixerBtnPress(event):
+def mixerEvent(event):
     global mixerTrackLaunchKeyIndex
+    global soloMode
 
     #move up selected track
     if event.data1 == 106 and event.data2 == 127:
@@ -260,6 +262,7 @@ def mixerBtnPress(event):
             s.sendMessageBottomRow("above track 125")
         else:
             mixerTrackLaunchKeyIndex = mixerTrackLaunchKeyIndex + 1
+            mixer.setTrackNumber(mixerTrackLaunchKeyIndex)
             s.sendMessageTopRow("Selection:")
             s.sendMessageBottomRow("Tracks " + str(mixerTrackLaunchKeyIndex) + " - " + str(mixerTrackLaunchKeyIndex+7))
             mixerInterface()
@@ -275,6 +278,7 @@ def mixerBtnPress(event):
             s.sendMessageBottomRow("track 0")
         else:
             mixerTrackLaunchKeyIndex = mixerTrackLaunchKeyIndex - 1
+            mixer.setTrackNumber(mixerTrackLaunchKeyIndex)
             s.sendMessageTopRow("Selection:")
             s.sendMessageBottomRow("Tracks " + str(mixerTrackLaunchKeyIndex) + " - " + str(mixerTrackLaunchKeyIndex+7))
             mixerInterface()
@@ -283,20 +287,48 @@ def mixerBtnPress(event):
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[17], lkc.COLOR_DARKER)
 
 
-    #mute master
+    #mute master/solo mode
     if event.data1 == 45 and event.data2 == 127:
-        mixer.muteTrack(0)
+        if not soloMode:
+            soloMode = True
+            l.lightPad(lkc.STATE_PULSING, list(lk.lightingDict)[28], lkc.COLOR_WHITE)
+        else:
+            soloMode = False
+            l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[28], lkc.COLOR_DARKER)
 
-    #mute a track
+    #mute a track/solo a track
     for i in range(0, 8):
         if event.data1 == 37+i and event.data2 == 127:
-            mixer.muteTrack(mixerTrackLaunchKeyIndex+i)
-    
+            if not soloMode:
+                mixer.muteTrack(mixerTrackLaunchKeyIndex+i)
+            else:
+                mixer.soloTrack(mixerTrackLaunchKeyIndex+i)
+
+    #panning
+    for i in range(0, 8):
+        if event.data1 == 21+i:
+            if event.data2 == 63 or event.data2 == 64:
+                mixer.setTrackPan(mixerTrackLaunchKeyIndex+i, 0)
+            else:
+                mixer.setTrackPan(mixerTrackLaunchKeyIndex+i, convertValue(event.data2, 0, 127, -1.0, 1.0))
+
+
+    #volume
+    for i in range(0, 7):
+        if event.data1 == 53+i:
+            if event.data2 == 101 or event.data2 == 102:
+                mixer.setTrackVolume(mixerTrackLaunchKeyIndex+i, 0.80)
+            else:
+                mixer.setTrackVolume(mixerTrackLaunchKeyIndex+i, convertValue(event.data2, 0, 127, 0.0, 1.0))
+    if event.data1 == 61:
+        if event.data2 == 101 or event.data2 == 102:
+                mixer.setTrackVolume(0, 0.80)
+        else:
+            mixer.setTrackVolume(0, convertValue(event.data2, 0, 127, 0.0, 1.0))
+
     #quit program menu (will be quit mode when implemented)
     if event.data1 == 105 and event.status == 176 and event.data2 == 127:
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[19], lkc.COLOR_RED)
-        s.sendMessageTopRow("Quit program")
-        s.sendMessageBottomRow("not implemented")
     elif event.data1 == 105 and event.status == 176 and event.data2 == 0:
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[19], lkc.COLOR_DARKERRED)
     
@@ -305,3 +337,8 @@ def mixerBtnPress(event):
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[18], lkc.COLOR_WHITE)
     elif event.data1 == 104 and event.status == 176 and event.data2 == 0:
         l.lightPad(lkc.STATE_STATIONARY, list(lk.lightingDict)[18], lkc.COLOR_DARKER)
+
+def convertValue(value, oldMin, oldMax, newMin, newMax):
+    oldRange = (oldMax - oldMin)
+    newRange = (newMax - newMin)
+    return (((value - oldMin) * newRange) / oldRange) + newMin
