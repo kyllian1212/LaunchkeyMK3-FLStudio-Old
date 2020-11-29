@@ -8,7 +8,16 @@
 
 ### Features (so far)
 * 'Undo', 'Play', 'Stop', 'Record', 'Pattern/Song Toggle' buttons on the controller now functional
-* Selected mixer track info & volume/pan settings showing in the 16x2 characters screen
+* Mixer mode, allowing you to: 
+  * See the selected mixer track info & volume/pan settings in the 16x2 characters screen
+  * Select tracks in the mixer 
+  * See peak meters in the 8x2 pad grid, either for 8 tracks, a single track or the master (which can be changed in the settings for this mode)
+  * Set pan and volume of each track
+  * Mute or solo each track
+
+### Planned Features (so far)
+* Channel Rack mode, including a step sequencer and other stuff
+* Compatibility with Launchkey 25 MK3 and Launchkey 25 MK3 (there is currently none)
 
 ### Credits
 * Big thanks to [HDSQ](https://www.youtube.com/channel/UCPB_zkvsJKuIkCgEzoXtN3g) for the inspiration with the [Launchkey MK2 Script](https://github.com/MiguelGuthridge/Novation-LaunchKey-Mk2-Script). It has definitely helped me coding this
