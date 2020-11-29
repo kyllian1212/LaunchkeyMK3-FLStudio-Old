@@ -16,7 +16,6 @@ import launchMapPages
 import midi
 
 #ext imports
-import consts as c
 import launchkeyConsts as lkc
 import screenSysex as s
 import lighting as l
