@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## v0.0.2
+## v1.0.0 - Mixer Mode
+
+### New features
+* Mixer mode, allowing you to:
+  * See the selected mixer track info & volume/pan settings in the 16x2 characters screen
+  * Select tracks in the mixer
+  * See peak meters in the 8x2 pad grid, either for 8 tracks, a single track or the master (which can be changed in the settings for this mode)
+  * Set pan and volume of each track
+  * Mute or solo each track
 
 ### Changes
 * If an inactive button (which means it has no functionality yet) is pressed, but has no LED to allow visual feedback, the screen will now show "Button currently inactive".
