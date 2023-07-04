@@ -1,3 +1,5 @@
+# OBSOLETE, WILL BE REPLACED SOON.
+
 # LaunchkeyMK3-FLStudio
 
 ### How to install: 
